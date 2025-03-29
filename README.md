@@ -24,7 +24,7 @@ Get your API key from the below links:
 `NOTE:` Having all three API keys is not mandatory. But you must have at lease ONE of those API keys to generate texts. ***For image generation, having OpenAI API key is MUST.***
 <hr>
 
-You are all set! Now time to use this 
+You are all set!
 
 # Usage
 
