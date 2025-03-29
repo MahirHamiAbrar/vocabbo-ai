@@ -12,7 +12,7 @@ Then install this repo to use it as a library:
 npm install path/to/your/vocabbo-ai-folder
 ```
 
-Then create a `.env` file in your project directory. The file should contain the variables present in the `.env.example` file.
+Then create a `.env` file in your project directory. The file should contain the variables present in the [.env.example](./.env.example) file.
 
 Get your API key from the below links:
  - Groq: https://console.groq.com/keys
@@ -24,12 +24,12 @@ Get your API key from the below links:
 `NOTE:` Having all three API keys is not mandatory. But you must have at lease ONE of those API keys to generate texts. ***For image generation, having OpenAI API key is MUST.***
 <hr>
 
-You are all set.
+You are all set! Now time to use this 
 
 # Usage
 
 ## Generating Word Meanings
-Source: [full_example.ts](./examples/word_meaning_example.ts)
+Source: [word_meaning_example.ts](./examples/word_meaning_example.ts)
 ```typescript
 import "dotenv/config";
 import { VocabboAI } from "vocabbo-ai";
@@ -49,6 +49,7 @@ console.log(out);
 <summary>
 Parameters documenation used in this example:
 <details>
+
 Parameters of `VocabboAI()`:
 
  * `ai_backend`: `groq` | `openai`
@@ -68,7 +69,7 @@ VocabboAI will always take `ENGLISH` words and translate them in the given langu
 JSON Output of the above code:
 <details>
 
-```json
+```bash
 {
   explanation: {
     en: 'A tesseract is a four-dimensional cube, the analog of a cube in three-dimensional space, and the extension of a square in two-dimensional space.',
@@ -104,7 +105,7 @@ JSON Output of the above code:
 
 
 ## Generating Images
-Source: [full_example.ts](./examples/image_gen_example.ts)
+Source: [image_gen_example.ts](./examples/image_gen_example.ts)
 ```typescript
 import "dotenv/config";
 import { VocabboAI, VocabboImageGenAI } from "vocabbo-ai";
@@ -127,6 +128,7 @@ console.log(data);
 <summary>
 Parameters documenation used in this example:
 <details>
+
 Parameters of `VocabboImageGenAI.create_image_gen_prompt()`:
  * `word`: The user-input word for the context
  * `language`: An AI generated sentence.
@@ -143,7 +145,7 @@ A detailed, illuminated tesseract, also known as an 8-cell or octachoron, floati
 ```
 
 Output for `console.log(data);`: (JSON data)
-```json
+```bash
 [
   {
     revised_prompt: "A detailed, illuminated tesseract, commonly known as an 8-cell or octachoron, hovers in a dark, starry expanse. This intricate structure, composed of 8 cubic cells, is visible and luminesces softly to emphasize its complex geometry. In the background, a group of astrophysicists, including a South Asian man, a Black woman, a Caucasian woman, and a Middle-Eastern man, study and analyze the higher-dimensional shape. A blackboard filled with complex mathematical equations pertaining to the shape's properties occupies their attention.",
@@ -155,7 +157,7 @@ Output for `console.log(data);`: (JSON data)
 </details>
 </summary>
 
-VocabboAI provides a downlaod function, to downlaod the image save it in `png` format.
+VocabboAI provides a downlaod function, to downlaod the image and save it in `png` format.
 
 Here is the code for it:
 ```typescript
@@ -166,12 +168,15 @@ const image_url = data[0].url;
 await download_image(image_url, 'tesseract.png');
 ```
 
-You can also manually download the image from the URL. **NOTE: The URL expires within 60 minutes.**
+You can also manually download the image from the URL. 
+
+**NOTE: The URL expires within 60 minutes.**
 
 <summary>
 The generated image looks something like this:
 <details>
 
+Image File: [tesseract.png](./images/tesseract.png)
 ![image](./images/tesseract.png)
 </details>
 </summary>
@@ -271,6 +276,7 @@ Image saved to tesseract.png
 Generated Image:
 <details>
 
+Image File: [heliosphere.png](./images/heliosphere.png)
 ![image](./images/heliosphere.png)
 </details>
 </summary>
