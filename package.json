@@ -1,0 +1,29 @@
+{
+  "name": "vocabbo-ai",
+  "version": "1.0.0",
+  "description": "The AI powering project \"vocabbo\"",
+  "homepage": "https://github.com/MahirHamiAbrar/vocabbo-ai#readme",
+  "bugs": {
+    "url": "https://github.com/MahirHamiAbrar/vocabbo-ai/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MahirHamiAbrar/vocabbo-ai.git"
+  },
+  "license": "ISC",
+  "author": "mhabrar",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "npx tsx src/index.ts"
+  },
+  "devDependencies": {
+    "eslint": "^9.23.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "openai": "^4.90.0"
+  }
+}

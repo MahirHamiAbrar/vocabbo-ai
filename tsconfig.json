@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "module": "es2022",
+        "target": "es2022",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["**/*.ts", "*.ts"], // Add every .ts file in the root directory
+  }
