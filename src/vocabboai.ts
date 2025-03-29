@@ -10,6 +10,14 @@ import {
 import OpenAI from "openai";
 import { BaseAIModel } from "./base_model";
 
+import { 
+    save_base64_image, 
+    create_data_savepath 
+} from "./utils";
+
+import * as fs from "fs";
+import * as path from "path";
+
 
 export class VocabboAI {
 
@@ -107,6 +115,7 @@ export class VocabboAI {
     async create_image_gen_prompt(word: string, context: string): Promise<string> {
         return (await this._model.create_image_gen_prompt(word, context));
     }
+
 };
 
 
@@ -114,7 +123,7 @@ export class VocabboAI {
 /* ********************************************************** */
 /* IMAGE GENERATION METHODS; ONLY POSSIBLE BY OPENAI BACKEND */
 /* ********************************************************* */
-class VocabboImageGenAI {
+export class VocabboImageGenAI {
 
     _model: OpenAI;
     _default_config: OpenAI.Images.ImageGenerateParams = {
@@ -160,6 +169,12 @@ class VocabboImageGenAI {
         if (config.user) this._current_config.user = config.user;
     }
 
+    /*
+        NOTE: The generated url is only valid for a short time (1 hour)
+        and the image is not saved in the OpenAI server.
+        So, if you want to save the image, you have to download it
+        using the url and save it in your local machine.
+    */
     async generate_image_url(
         prompt: string,
     ): Promise<OpenAI.Images.Image[]> {
@@ -176,18 +191,54 @@ class VocabboImageGenAI {
     }
 
     async generate_image_base64(
-        prompt: string,
-    ): Promise<OpenAI.Images.Image[]> {
-        
-        // check if the prompt is empty
-        if (!prompt || prompt.length == 0) {
-            throw new Error("Prompt is empty.");
+        config: ImageGenConfig | null = null,
+        save_image: boolean = true,
+    ): Promise<ImageData> {
+
+        if (!config) {
+            config = this._default_config;
         }
 
-        this._current_config.response_format = 'b64_json';
-        this._current_config.prompt = prompt;
-        
-        return (await this._model.images.generate(this._current_config)).data;
+        assert(
+            (!config.response_format || config.response_format == 'b64_json'), 
+            "Response Format must be 'b64_json'."
+        );
+
+        const _resp = await this._model.images.generate(config);
+        const _images = _resp.data;
+        var _img_paths: string[] = [];
+        // console.log(_images);
+
+        if (save_image) {
+            for (const img of _images) {
+                const img_path: string = await save_base64_image(img.b64_json);
+                _img_paths.push(img_path);
+            }
+        }
+
+        return {
+            images: _images,
+            paths: _img_paths
+        };
+    }
+
+    async save_image_data(
+        config: ImageGenConfig,
+        images: ImageData
+    ): Promise<string> {
+
+        // create a new data save directory (with unique name)
+        const savedir: string = create_data_savepath();
+        const datafilepath: string = path.join(savedir, 'data.json');
+        const jsondata: string = JSON.stringify({config, images}, null, 4);
+
+        // save the data
+        fs.writeFileSync(
+            datafilepath,
+            jsondata
+        );
+
+        return datafilepath;
     }
     
 };

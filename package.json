@@ -13,9 +13,13 @@
   "license": "ISC",
   "author": "mhabrar",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+
   "scripts": {
-    "test": "npx tsx src/index.ts"
+    "test": "npx tsx src/index.ts",
+    "build": "tsup src/index.ts --format esm,cjs --dts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

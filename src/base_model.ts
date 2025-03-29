@@ -1,15 +1,9 @@
 import OpenAI from "openai";
 import { assert } from "console";
-import { 
-    save_base64_image, 
-    create_data_savepath 
-} from "./utils";
 
 import {
     ModelSearchResult,
-    WordExplanation,
-    ImageGenConfig,
-    ImageData
+    WordExplanation
 } from "./types";
 
 import {
@@ -17,25 +11,11 @@ import {
     IMAGE_GENERATION_SYSTEM_PROMPT,
 } from "./prompts";
 
-import * as fs from "fs";
-import * as path from "path";
-
 
 export class BaseAIModel {
 
     _client: OpenAI;
     _model_name: string;
-
-    default_image_gen_config: ImageGenConfig = {
-        prompt: "",
-        model: "dall-e-3",
-        n: 1,
-        quality: 'standard',
-        response_format: 'b64_json',
-        size: '1024x1024',
-        style: 'vivid',
-        user: ''
-    };
 
     constructor(
         api_key: string,
@@ -124,56 +104,4 @@ export class BaseAIModel {
             `Sentence: ${context}\n\nEmphasize Word: ${word}.`
         )).prompt;
     }
-
-    async generate_image(
-        config: ImageGenConfig | null = null,
-        save_image: boolean = true,
-    ): Promise<ImageData> {
-
-        if (!config) {
-            config = this.default_image_gen_config;
-        }
-
-        assert(
-            (!config.response_format || config.response_format == 'b64_json'), 
-            "Response Format must be 'b64_json'."
-        );
-
-        const _resp = await this._client.images.generate(config);
-        const _images = _resp.data;
-        var _img_paths: string[] = [];
-        // console.log(_images);
-
-        if (save_image) {
-            for (const img of _images) {
-                const img_path: string = await save_base64_image(img.b64_json);
-                _img_paths.push(img_path);
-            }
-        }
-
-        return {
-            images: _images,
-            paths: _img_paths
-        };
-    }
-
-    async save_image_data(
-        config: ImageGenConfig,
-        images: ImageData
-    ): Promise<string> {
-
-        // create a new data save directory (with unique name)
-        const savedir: string = create_data_savepath();
-        const datafilepath: string = path.join(savedir, 'data.json');
-        const jsondata: string = JSON.stringify({config, images}, null, 4);
-
-        // save the data
-        fs.writeFileSync(
-            datafilepath,
-            jsondata
-        );
-
-        return datafilepath;
-    }
 };
-
